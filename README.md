@@ -45,22 +45,53 @@ cp config.example.json config.json
 cp auth.example.json  auth.json
 ```
 
-### Lấy thông tin đăng nhập
+### Bước 1 — điền `auth.json` (chìa khoá đăng nhập)
 
-Mở [craft-world.gg](https://craft-world.gg), đăng nhập, mở DevTools (F12):
+Hai file này bạn **tự điền bằng tay**, chép giá trị từ trình duyệt sang. Không có lệnh nào tự lấy hộ được, vì đây chính là thông tin phiên đăng nhập của bạn.
 
-**`auth.json`** — tab **Application** → IndexedDB → `firebaseLocalStorageDb` → `firebaseLocalStorage`. Trong bản ghi duy nhất ở đó:
+Mở [craft-world.gg](https://craft-world.gg), đăng nhập, bấm **F12** để mở DevTools:
 
-- `apiKey` → chép vào `apiKey`
-- `stsTokenManager.refreshToken` → chép vào `refreshToken`
+1. Chọn tab **Application** (không phải Network)
+2. Cột trái, mục **Storage** → mở **IndexedDB** → `firebaseLocalStorageDb` → `firebaseLocalStorage`
+3. Bên phải hiện ra **một bản ghi duy nhất** — click vào nó để xem nội dung dạng cây
+4. Tìm hai giá trị này:
 
-**`config.json`** — tab **Network**, lọc `ingest`, rồi bấm một nhà máy bất kỳ trong game. Xem Payload để lấy `factoryId` / `mineId` / `areaId`. Điền vào các mảng `factories` và `areas`.
+| Trong trình duyệt | Chép vào `auth.json` |
+|---|---|
+| `apiKey` — chuỗi bắt đầu bằng `AIzaSy...` | `"apiKey"` |
+| `stsTokenManager` → `refreshToken` — chuỗi rất dài, bắt đầu bằng `AMf-vB...` | `"refreshToken"` |
 
-Kiểm tra trước khi chạy thật:
+```json
+{
+  "apiKey": "AIzaSy...",
+  "refreshToken": "AMf-vB..."
+}
+```
+
+**Tại sao lại là `refreshToken` chứ không phải token đăng nhập?** Token đăng nhập (ID token) chỉ sống **1 tiếng** — chép nó vào thì cứ mỗi tiếng bot lại chết. Còn `refreshToken` sống **hàng tháng**, và [auth.js](auth.js) dùng nó để tự xin ID token mới trước khi cái cũ hết hạn.
+
+Nghĩa là **bạn chỉ phải làm bước này một lần duy nhất**. Chỉ khi refreshToken bị thu hồi — bạn đăng xuất khỏi game trên mọi thiết bị, hoặc đổi mật khẩu — thì mới phải lấy lại. Dấu hiệu là bot báo `401` liên tục và không tự phục hồi.
+
+Kiểm tra ngay sau khi điền:
 
 ```bash
 node auth.js        # phải in ra "token refreshed"
 ```
+
+Nếu lệnh này chạy được thì phần đăng nhập đã xong.
+
+### Bước 2 — điền `config.json` (ID các nhà máy của bạn)
+
+Mỗi tài khoản có bộ ID riêng, nên phải tự lấy:
+
+1. Vẫn trong DevTools, chuyển sang tab **Network**
+2. Gõ `ingest` vào ô lọc
+3. Trong game, bấm chạy **một nhà máy bất kỳ**
+4. Một request tên `ingest` hiện ra — click vào, xem tab **Payload**
+
+Trong `payload` sẽ có `factoryId` (nhà máy), `mineId` (mỏ), hoặc `areaId` (khu vực thu hoạch). Lặp lại với từng công trình rồi điền vào các mảng `factories` và `areas` trong `config.json`.
+
+Số lượng nhà máy bot chạy lấy từ **độ dài mảng** — thêm một ID là bot tự chạy thêm một lò, không phải sửa code.
 
 ### Chạy
 
