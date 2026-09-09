@@ -1,212 +1,230 @@
-# Craft World Auto Bot 🎮
+# Craft World Auto Bot
 
-An automated bot for Craft World game that handles mining, factory operations, and area claiming with multi-account support.
+Bot tự động cho [Craft World](https://craft-world.gg) — chạy toàn bộ chuỗi sản xuất 6 tầng, tự làm mới token, tự bám phiên bản game, và tự bấm hộ hai loại boost x2.
 
-## Features ✨
+Bot gọi thẳng HTTP API của game. Không điều khiển trình duyệt, không Selenium, không cần mở game. Chạy được 24/7 trên một VPS nhỏ nhất.
 
-- **Automated Mining**: Start and claim mines automatically
-- **Factory Operations**: Automated factory management
-- **Area Claiming**: Auto-claim areas for expansion
-- **Multi-Account Support**: Process multiple accounts sequentially
-
-## Installation 🚀
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/vikitoshi/Craft-World-Auto-Bot.git
-   cd Craft-World-Auto-Bot
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Create configuration files**
-   ```bash
-   touch token.txt
-   touch config.json
-   ```
-
-4. **Add your tokens**
-   Open `token.txt` and add your JWT tokens (one per line):
-   ```
-   your_jwt_token_1
-   your_jwt_token_2
-   your_jwt_token_3
-   ```
-
-5. **Configure account IDs**
-   Create `config.json` with your mine, factory, and area IDs:
-   ```json
-   {
-     "mineId_1": "your_mine_id_for_account_1",
-     "factoryId_1": "your_factory_id_for_account_1",
-     "areaId_1": "your_area_id_for_account_1",
-     "mineId_2": "your_mine_id_for_account_2",
-     "factoryId_2": "your_factory_id_for_account_2",
-     "areaId_2": "your_area_id_for_account_2"
-   }
-   ```
-   
-   > **Note**: Each account needs its own set of IDs. Use the format `{type}Id_{number}` where number starts from 1.
-
-## Usage 💻
-
-### Quick Start
-```bash
-node index.js
-```
-
-## Getting Required IDs 🔍
-
-You need to obtain three types of IDs for each account: Mine ID, Factory ID, and Area ID.
-
-### Step-by-Step Tutorial:
-
-1. **Open Craft World Game**
-   - Go to [https://preview.craft-world.gg/](https://preview.craft-world.gg/)
-   - Login to your account
-
-2. **Open Developer Tools**
-   - Press `F12` or right-click and select "Inspect Element"
-   - Go to the **Network** tab
-   - Make sure to check "Preserve log" option
-
-3. **Get Mine ID**
-   - In the game, click on any mine to start mining
-   - In the Network tab, look for requests to `user-actions/ingest`
-   - Click on the request and check the **Request Payload**
-   - Look for `"actionType": "START_MINE"` and copy the `mineId` value
-   
-   ![Mine ID Location](https://github.com/vikitoshi/Craft-World-Auto-Bot/blob/main/1.PNG?raw=true)
-   
-4. **Get Factory ID**
-   - Click on any factory in the game to start production
-   - In the Network tab, find the request with `"actionType": "START_FACTORY"`
-   - Copy the `factoryId` value from the payload
-   
-   ![Factory ID Location](https://github.com/vikitoshi/Craft-World-Auto-Bot/blob/main/2.PNG?raw=true)
-
-5. **Get Area ID**
-   - Click on any area to claim it
-   - Look for requests with `"actionType": "CLAIM_AREA"`
-   - Copy the `areaId` value from the payload
-   
-   ![Area ID Location](https://github.com/vikitoshi/Craft-World-Auto-Bot/blob/main/3.PNG?raw=true)
-
-### Example Network Request:
-```json
-{
-  "data": [{
-    "id": "uuid-here",
-    "actionType": "START_MINE",
-    "payload": {
-      "mineId": "06838603-fec0-7831-8000-01085828af7a"
-    },
-    "time": 1234567890
-  }]
-}
-```
-
-### Config.json Example:
-```json
-{
-  "mineId_1": "06838603-fec0-7831-8000-01085828af7a",
-  "factoryId_1": "0683ea27-51fb-7e76-8000-334a76e821ae", 
-  "areaId_1": "0683e9f4-3f4f-7df3-8000-490a6d41be7e",
-  "mineId_2": "different-mine-id-for-account-2",
-  "factoryId_2": "different-factory-id-for-account-2",
-  "areaId_2": "different-area-id-for-account-2"
-}
-```
-
-## File Structure 📁
-
-```
-Craft-World-Auto-Bot/
-├── index.js          # Main bot script
-├── token.txt          # JWT tokens (one per line)
-├── config.json        # Account IDs configuration
-├── package.json       # Node.js dependencies
-├── README.md          # This file
-└── .gitignore         # Git ignore rules
-```
-
-## Security Notes 🔒
-
-- ⚠️ **Never share your JWT tokens**
-- 🔐 Keep your `token.txt` and `config.json` files secure and private
-- 🚫 Don't commit tokens or sensitive IDs to version control
-- 🔄 Tokens may expire and need refreshing
-- 🔒 Each account has unique IDs - don't mix them up
-
-## Troubleshooting 🔧
-
-### Common Issues
-
-1. **"No tokens found in token.txt"**
-   - Make sure `token.txt` exists in the project directory
-   - Ensure tokens are properly formatted (one per line)
-   - Check that tokens don't have extra spaces
-
-2. **"Missing IDs for account X in config.json"**
-   - Make sure `config.json` exists and is properly formatted
-   - Verify you have `mineId_X`, `factoryId_X`, and `areaId_X` for each account
-   - Check that the JSON syntax is correct
-
-3. **"Error: ENOTFOUND preview.craft-world.gg"**
-   - Check your internet connection
-   - Verify the game servers are online
-
-4. **"Failed to start mine/factory/claim area"**
-   - Token might be expired - get a fresh token
-   - Check if your account has sufficient resources
-   - Verify that your IDs are correct and not expired
-
-5. **Bot stops unexpectedly**
-   - Check console for error messages
-   - Ensure stable internet connection
-   - The bot now has retry mechanisms for failed requests
-
-### Getting JWT Tokens
-
-1. Open Craft World in your browser
-2. Open Developer Tools (F12)
-3. Go to Network tab
-4. Perform any action in the game
-5. Look for requests to `craft-world.gg/api`
-6. Copy the JWT token from the Authorization header (it will be in format: `Bearer jwt_your_token_here`)
-7. Only copy the part after `jwt_` for your token.txt file
-
-### Getting Account IDs
-
-Follow the detailed tutorial above in the "Getting Required IDs" section to obtain your Mine ID, Factory ID, and Area ID for each account.
-
-## Contributing 🤝
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Disclaimer ⚠️
-
-This bot is for educational purposes only. Use at your own risk. The developers are not responsible for any account suspensions or other consequences resulting from the use of this bot.
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support 💬
-
-If you find this project helpful, please give it a ⭐ on GitHub!
-
-For issues and questions, please open an issue in the GitHub repository.
+> Fork từ [vikitoshi/Craft-World-Auto-Bot](https://github.com/vikitoshi/Craft-World-Auto-Bot). Bản gốc chỉ chạy `index.js` với host preview cũ; bản này viết lại phần vòng lặp và thêm auth / boost / alert.
 
 ---
 
-**Happy Botting!** 🎮✨
+## Bot làm gì
+
+**Chuỗi cung ứng.** Sáu tầng, mỗi tầng một timer độc lập:
+
+```
+earthMine → mud → clay → sand → copper → steel
+```
+
+Mỗi tầng **claim nguyên liệu của tầng trên** rồi **start các nhà máy của mình**. Ví dụ tầng `clay` sẽ `CLAIM_AREA` khu mud, sau đó `START_FACTORY` cả 3 lò clay.
+
+**Tự làm mới token.** Firebase ID token chỉ sống 1 tiếng. Bot dùng refresh token (sống hàng tháng) tự lấy token mới ngay khi đang chạy. Không phải dán tay.
+
+**Tự bám phiên bản game.** Server từ chối client cũ bằng `OUTDATED_VERSION`. Bot đọc `minAppVersion` trong chính lỗi đó, tự sửa `config.json`, rồi thử lại. Trong thực tế nó đã tự đi từ 1.15.1 lên 1.21.0 mà không cần ai đụng vào.
+
+**Boost x2** — nếu tài khoản có gói skip quảng cáo, xem [Boost](#boost).
+
+**Cảnh báo Telegram.** Gộp lỗi trong 5 giây thành một tin, chống trùng trong 10 phút.
+
+---
+
+## Cài đặt
+
+Cần Node.js 18 trở lên.
+
+```bash
+git clone <repo-của-bạn>
+cd Craft-World-Auto-Bot
+npm install
+```
+
+Rồi tạo hai file cấu hình từ mẫu:
+
+```bash
+cp config.example.json config.json
+cp auth.example.json  auth.json
+```
+
+### Lấy thông tin đăng nhập
+
+Mở [craft-world.gg](https://craft-world.gg), đăng nhập, mở DevTools (F12):
+
+**`auth.json`** — tab **Application** → IndexedDB → `firebaseLocalStorageDb` → `firebaseLocalStorage`. Trong bản ghi duy nhất ở đó:
+
+- `apiKey` → chép vào `apiKey`
+- `stsTokenManager.refreshToken` → chép vào `refreshToken`
+
+**`config.json`** — tab **Network**, lọc `ingest`, rồi bấm một nhà máy bất kỳ trong game. Xem Payload để lấy `factoryId` / `mineId` / `areaId`. Điền vào các mảng `factories` và `areas`.
+
+Kiểm tra trước khi chạy thật:
+
+```bash
+node auth.js        # phải in ra "token refreshed"
+```
+
+### Chạy
+
+```bash
+node factory_loop.js
+```
+
+---
+
+## Boost
+
+Game có **hai** hệ boost khác nhau, bot dùng cả hai:
+
+| | Boost mine | Boost toàn cục |
+|---|---|---|
+| Nút trong game | `▶x2` trên nhà máy đất | `+2h` góc dưới phải |
+| Endpoint | `POST /graphql` — mutation `SkipAdWatch` | `POST /api/2/land-plots/boosters` |
+| Tác dụng | Lần chạy kế tiếp của **một mine** ăn x2 | Giảm 50% thời gian **toàn bộ 5 land plot** |
+| Bot gọi khi nào | Ngay trước mỗi `START_MINE` | Lúc khởi động, rồi mỗi 4 tiếng |
+| Giới hạn | Quota theo ngày, reset lúc 23:59 | Đồng hồ tối đa 12 tiếng |
+
+Cả hai nút này bình thường bắt xem quảng cáo. **Nếu tài khoản có gói skip quảng cáo** thì chỉ cần một cú click — và bot click hộ bạn.
+
+### `boost.vip` — công tắc quan trọng nhất
+
+```jsonc
+"boost": {
+  "vip": true,               // tài khoản có gói skip quảng cáo?
+  "mineAdPlacement": "EARTH",
+  "globalBoostEverySec": 14400,
+  "globalBoostMaxHours": 12
+}
+```
+
+**`vip: true`** — bot gọi cả hai boost. Thời gian sản xuất giảm còn một nửa, nên `durations` phải là bộ **đã chia đôi**.
+
+**`vip: false`** — bot không gọi boost nào. Lúc này phải copy `durationsNoVip` đè lên `durations`, nếu không bot sẽ gọi sớm gấp đôi và log đầy `is not idle`.
+
+```jsonc
+"durations":      { "earthMine": 3600, "mud": 595,  ... }   // dùng khi vip: true
+"durationsNoVip": { "earthMine": 7200, "mud": 1190, ... }   // dùng khi vip: false
+```
+
+Hai bộ số này để sẵn trong config, đổi qua lại chỉ là copy một khối.
+
+---
+
+## Cấu hình
+
+`factory_loop.js` đọc **toàn bộ** số lượng và thời gian từ `config.json`. Thêm một nhà máy hay đổi chu kỳ **không cần sửa code** — số lò lấy từ độ dài mảng, chu kỳ lấy từ `durations`.
+
+| Khoá | Ý nghĩa |
+|---|---|
+| `appVersion` | Header `x-app-version`. Bot tự cập nhật khi game lên đời. |
+| `factories` | ID nhà máy theo tầng. Độ dài mảng = số lò bot sẽ chạy. |
+| `areas` | ID khu vực cho `CLAIM_AREA`. Không có khu steel — steel claim khu copper. |
+| `durations` | Chu kỳ mỗi tầng, tính bằng giây. Bot cộng thêm 5–10% jitter ngẫu nhiên. |
+| `boost` | Xem [Boost](#boost). |
+| `telegram` | `botToken` từ @BotFather, `chatId` từ `getUpdates`. Để trống cả hai = tắt. |
+
+---
+
+## Các file
+
+| File | Vai trò |
+|---|---|
+| `factory_loop.js` | Bot chính. Chạy cái này. |
+| `auth.js` | Làm mới Firebase token. Chạy riêng để kiểm tra. |
+| `notify.js` | Gửi cảnh báo Telegram, gộp và chống trùng. |
+| `log_server.js` | Dashboard log realtime qua SSE. |
+| `mine_loop.js` | Chỉ chạy mine. Có trước `factory_loop.js`, giữ lại để tham khảo. |
+| `test_factory*.js` | Script thử một phát, dùng khi debug. |
+| `index.js` | Bản gốc của repo upstream. Không dùng. |
+
+---
+
+## Chạy 24/7 với systemd
+
+```ini
+# /etc/systemd/system/craft-bot.service
+[Unit]
+Description=Craft World factory bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Craft-World-Auto-Bot
+ExecStart=/usr/bin/node /home/ubuntu/Craft-World-Auto-Bot/factory_loop.js
+Restart=always
+RestartSec=30
+StandardOutput=append:/home/ubuntu/Craft-World-Auto-Bot/factory_loop.log
+StandardError=append:/home/ubuntu/Craft-World-Auto-Bot/factory_loop.log
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now craft-bot
+journalctl -u craft-bot -f
+```
+
+Dashboard log (tuỳ chọn): đặt biến môi trường `LOG_TOKEN` rồi chạy `log_server.js`, mở `http://<ip>:8080/?key=<LOG_TOKEN>`.
+
+---
+
+## Đọc log
+
+Mấy dòng này trông như lỗi nhưng **hoàn toàn bình thường**:
+
+| Log | Nghĩa là |
+|---|---|
+| `is not idle` | Nhà máy đang sản xuất dở. Vòng sau sẽ start được. |
+| `still running` | Mine chưa xong chu kỳ. Bình thường ngay sau khi claim. |
+| `Not enough balance` | Chuỗi chưa đủ nguyên liệu. Sẽ hết khi các tầng trên chạy đủ. |
+| `Nothing to claim` | Khu vực chưa tích được gì. |
+| `boost not armed` | Hết quota boost hôm nay. Bot vẫn start bình thường, chỉ là không x2. |
+
+Đáng lo thì chỉ có `401` (refresh token bị thu hồi) và lỗi mạng liên tục.
+
+---
+
+## Chi tiết API
+
+Mọi hành động trong game đi qua một endpoint duy nhất:
+
+```
+POST https://craft-world.gg/api/1/user-actions/ingest
+{ "data": [ { "id": "<uuidv7>", "actionType": "START_FACTORY",
+              "payload": { "factoryId": "..." }, "time": <ms epoch> } ] }
+```
+
+Bốn thứ dễ sai, mỗi thứ đều tốn vài vòng thử-sai mới ra:
+
+**`id` phải là UUIDv7.** Gửi v4 nhận về `Invalid user action format`. Đây là lý do repo cần `uuid@11+` chứ không phải `uuid@9` của bản gốc.
+
+**`time` phải tăng nghiêm ngặt** trên mỗi tài khoản. Sáu timer chạy song song sẽ đá nhau, nên mọi request đi qua một mutex chung và mỗi cái được đóng dấu `max(now, lastTime + 1)`.
+
+**Không có `CLAIM_FACTORY`.** Nhà máy chỉ được `START_FACTORY`; sản phẩm thu bằng `CLAIM_AREA` trên khu vực. Chỉ mine mới có động từ claim riêng là `CLAIM_MINE`.
+
+**`CLAIM_AREA` bắt buộc có `amountToClaim`**, và phải gửi số thật lớn. Gửi `1` thì server vẫn trả OK nhưng chỉ thu đúng 1 đơn vị — cả chuỗi sẽ chết đói từ tầng 3 trở xuống mà không báo lỗi gì. Bot gửi 1 tỷ, server tự kẹp về "thu hết".
+
+Ngoài ra, `factoryInventory` trong response **chỉ liệt kê nhà máy đang rảnh**. Nhà máy đang chạy biến mất khỏi danh sách.
+
+---
+
+## Bảo mật
+
+`auth.json`, `config.json`, `token.txt` đều nằm trong `.gitignore` — chúng chứa refresh token Firebase (quyền truy cập toàn bộ tài khoản, sống hàng tháng) và Telegram bot token.
+
+**Trước khi push lần đầu**, kiểm tra remote đang trỏ về repo của chính bạn:
+
+```bash
+git remote -v
+```
+
+Nếu bạn clone từ repo khác, `origin` vẫn trỏ về đó. Đổi bằng `git remote set-url origin <repo-của-bạn>`.
+
+Nếu lỡ commit nhầm: thu hồi refresh token bằng cách đăng xuất khỏi game trên mọi thiết bị, và `/revoke` bot Telegram qua @BotFather.
+
+---
+
+## Giấy phép
+
+MIT — như repo gốc.

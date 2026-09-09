@@ -61,7 +61,7 @@ async function readTokens() {
 
 class CraftWorldBot {
   constructor(accountIndex) {
-    this.baseURL = 'https://preview.craft-world.gg/api/1/user-actions/ingest';
+    this.baseURL = 'https://craft-world.gg/api/1/user-actions/ingest';
     this.authToken = null;
     this.mineId = null;
     this.factoryId = null;
@@ -85,7 +85,7 @@ class CraftWorldBot {
       "sec-fetch-site": "same-origin",
       "sec-gpc": "1",
       "x-app-version": "0.33.7",
-      "Referer": "https://preview.craft-world.gg/",
+      "Referer": "https://craft-world.gg/",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     };
   }

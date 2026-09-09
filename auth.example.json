@@ -1,0 +1,5 @@
+{
+  "_comment": "Firebase credentials. Grab both from DevTools -> Application -> IndexedDB -> firebaseLocalStorageDb -> firebaseLocalStorage: apiKey, and stsTokenManager.refreshToken. The refresh token is long-lived (months) and grants full account access — never commit this file.",
+  "apiKey": "AIzaSy...",
+  "refreshToken": "AMf-vB..."
+}

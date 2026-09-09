@@ -1,0 +1,56 @@
+{
+  "_comment_appVersion": "x-app-version header. factory_loop.js auto-bumps this when the server returns OUTDATED_VERSION, so the value here only needs to be a recent one.",
+  "appVersion": "1.21.0",
+
+  "_comment_factories": "Your own building IDs, grouped by production tier. Grab them from DevTools (see README). Counts are read from these arrays — add an ID and the bot starts driving it, no code change.",
+  "factories": {
+    "earthMine": ["<mine-uuid>"],
+    "mud": ["<uuid>", "<uuid>"],
+    "clay": ["<uuid>"],
+    "sand": ["<uuid>"],
+    "copper": ["<uuid>"],
+    "steel": ["<uuid>"]
+  },
+
+  "_comment_areas": "Area IDs that CLAIM_AREA harvests. There is no steel area — steel claims the copper one.",
+  "areas": {
+    "mud": "<area-uuid>",
+    "clay": "<area-uuid>",
+    "sand": "<area-uuid>",
+    "copper": "<area-uuid>"
+  },
+
+  "_comment_durations": "Production time per tier, in seconds. MUST match your boost state: use these halved values only while boost.vip is true, otherwise copy durationsNoVip over this.",
+  "durations": {
+    "earthMine": 3600,
+    "mud": 595,
+    "clay": 434,
+    "sand": 434,
+    "copper": 1800,
+    "steel": 6960
+  },
+
+  "_comment_boost": "vip=true means the account owns the skip-ads pack, so the x2 buttons cost only a click and the bot presses them for you. vip=false disables both boost systems — set durations to durationsNoVip as well.",
+  "boost": {
+    "vip": true,
+    "mineAdPlacement": "EARTH",
+    "globalBoostEverySec": 14400,
+    "globalBoostMaxHours": 12
+  },
+
+  "_comment_durationsNoVip": "Un-boosted durations (double the boosted ones). Copy over durations when boost.vip is false.",
+  "durationsNoVip": {
+    "earthMine": 7200,
+    "mud": 1190,
+    "clay": 867,
+    "sand": 867,
+    "copper": 3600,
+    "steel": 13920
+  },
+
+  "_comment_telegram": "Optional. Leave both empty to disable alerts; the bot runs unchanged.",
+  "telegram": {
+    "botToken": "",
+    "chatId": ""
+  }
+}

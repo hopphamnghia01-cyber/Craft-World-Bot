@@ -1,0 +1,16 @@
+# Secrets — NEVER commit these.
+# auth.json holds the Firebase refreshToken (long-lived: full account access).
+# config.json holds the Telegram bot token alongside your factory IDs.
+auth.json
+token.txt
+config.json
+
+# Runtime output
+*.log
+
+# Local scratch
+config.json.bak
+probe*.js
+test_*.js
+
+node_modules/
